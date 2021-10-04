@@ -23,17 +23,19 @@ export class ShowListComponent implements OnInit {
   constructor(private showsService: ShowsService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.showType = 'movie';
-    this.loadShows('movie');
+    this.showType = 'Movie';
+    this.loadShows('Movie');
   }
 
   loadShows(showType: string){
     this.showsService.getShows(showType, this.pageNumber, this.pageSize, this.searchParameters).subscribe(response => {
       if(this.showType === showType)
-        this.shows = this.shows.concat(response.result);
-      else this.shows = response.result;
+        this.shows = this.shows.concat(response.data);
+      else 
+        this.shows = response.data;
 
       this.pagination = response.pagination;
+      console.log(this.pagination)
       this.showType = showType;
     }, error => {
       console.log(error);
@@ -70,7 +72,7 @@ export class ShowListComponent implements OnInit {
     this.isSearching = true;
 
     this.showsService.getShows('all', this.pageNumber, this.pageSize, this.searchParameters).subscribe(response => {
-      this.shows = response.result;
+      this.shows = response.data;
       this.pagination = response.pagination;
     })
     

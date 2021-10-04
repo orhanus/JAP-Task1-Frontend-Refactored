@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ShowsService {
-  url = environment.apiUrl + 'shows/';
+  baseUrl = environment.apiUrl;
   paginatedResult: PaginatedResult<Show[]> = new PaginatedResult<Show[]>();
 
   constructor(private http: HttpClient) { }
@@ -23,17 +23,16 @@ export class ShowsService {
       params = params.append('pageSize', itemsPerPage.toString());
       params = params.append('searchParams', searchParameters === "" ? null : searchParameters);
     }
-    return this.http.get<Show[]>(this.url + showType, {observe: 'response', params}).pipe(
+    return this.http.get<PaginatedResult<Show[]>>(this.baseUrl + 'media/' + showType, {observe: 'response', params}).pipe(
       map(response => {
-        this.paginatedResult.result = response.body;
-        if(response.headers.get('Pagination') !== null){
-          this.paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
-        }
+        this.paginatedResult.data = response.body.data;
+        this.paginatedResult.pagination = response.body.pagination;
+
         return this.paginatedResult;
       })
     );
   }
   addRating(rating: Rating){
-    return this.http.post<Show[]>(`${this.url}${rating.showId}/rate`, { score: rating.score });
+    return this.http.post<Show[]>(`${this.baseUrl}rating/${rating.showId}/rate`, { score: rating.score });
   }
 }

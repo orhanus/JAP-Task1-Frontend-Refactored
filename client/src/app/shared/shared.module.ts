@@ -35,7 +35,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     ToastrModule,
     TitleComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    CommonModule
   ]
 })
 export class SharedModule { }
